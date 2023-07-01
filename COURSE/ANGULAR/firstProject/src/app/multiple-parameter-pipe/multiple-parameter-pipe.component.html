@@ -1,0 +1,22 @@
+<h1>MULTIPLE PARAMETER PIPE EXAMPLE</h1>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>NAME</th>
+            <th>TOUR : 1</th>
+            <th>TOUR : 2</th>
+            <th>TOUR : 3</th>
+            <th>TOTAL</th>
+        </tr>
+    </thead>
+    <tbody *ngFor = "let user of users">
+        <tr>
+            <td>{{user.name}}</td>
+            <td>{{user.firstScore}}</td>
+            <td>{{user.secondScore}}</td>
+            <td>{{user.thirdScore}}</td>
+            <td>{{user.firstScore | total:user.secondScore:user.thirdScore}}</td>
+        </tr>
+    </tbody>
+</table>

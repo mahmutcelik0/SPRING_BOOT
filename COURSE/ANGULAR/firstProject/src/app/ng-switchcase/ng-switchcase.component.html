@@ -1,0 +1,23 @@
+<h1>NG SWITCH CASE</h1>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>USER ID</th>
+            <th>ID</th>
+            <th>TITLE</th>
+            <th>BODY</th>
+        </tr>
+    </thead>
+    <tbody *ngFor = "let post of posts">
+        <tr>
+            <td [ngSwitch] = "post.userId">
+                <span *ngSwitchCase = "1">MAN</span>
+                <span *ngSwitchCase = "2">WOMAN</span>
+                <span *ngSwitchDefault>NA</span>
+            </td>
+            <td>{{post.title}}</td>
+            <td>{{post.body}}</td>            
+        </tr>
+    </tbody>
+</table>
