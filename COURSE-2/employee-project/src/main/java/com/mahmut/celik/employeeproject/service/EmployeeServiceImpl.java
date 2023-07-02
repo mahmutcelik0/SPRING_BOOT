@@ -1,56 +1,52 @@
 package com.mahmut.celik.employeeproject.service;
 
-import com.mahmut.celik.employeeproject.dao.EmployeeDAO;
 import com.mahmut.celik.employeeproject.exception.EmployeeNotFoundException;
 import com.mahmut.celik.employeeproject.model.Employee;
+import com.mahmut.celik.employeeproject.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService{
-    private final EmployeeDAO employeeDAO;
+    private final EmployeeRepository employeeRepository;
 
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
     public List<Employee> findAll() {
-        return employeeDAO.findAll();
+        return employeeRepository.findAll();
     }
 
     @Override
     public Employee findById(Integer employeeId) {
-        Employee employee = employeeDAO.findById(employeeId);
-        if(employee == null){
+        Optional<Employee> employee = employeeRepository.findById(employeeId);
+        if(employee.isEmpty()){
             throw new EmployeeNotFoundException("EMPLOYEE NOT FOUND IN ID: " + employeeId);
         }
-        return employee;
+        return employee.get();
     }
 
     @Override
     @Transactional
     public Employee addEmployee(Employee employee) {
-        return employeeDAO.addEmployee(employee);
+        return employeeRepository.save(employee);
     }
 
     @Override
     @Transactional
-    public Employee deleteEmployee(Integer employeeId) {
-        return employeeDAO.deleteEmployee(employeeId);
+    public void deleteEmployee(Integer employeeId) {
+        employeeRepository.deleteById(employeeId);
     }
 
     @Override
     @Transactional
     public Employee updateEmployee(Employee employee) {
-        Employee employee1 = employeeDAO.updateEmployee(employee);
+        return employeeRepository.save(employee);
 
-        if (employee1 == null){
-            throw new EmployeeNotFoundException("EMPLOYEE NOT EXIST IN: " + employee.getId());
-        }
-
-        return employee1;
     }
 }

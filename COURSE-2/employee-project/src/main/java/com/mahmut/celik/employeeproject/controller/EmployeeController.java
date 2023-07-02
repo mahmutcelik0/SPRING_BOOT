@@ -1,6 +1,5 @@
 package com.mahmut.celik.employeeproject.controller;
 
-import com.mahmut.celik.employeeproject.dao.EmployeeDAO;
 import com.mahmut.celik.employeeproject.model.Employee;
 import com.mahmut.celik.employeeproject.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +37,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{employeeId}")
-    public Employee deleteEmployee(@PathVariable Integer employeeId){
-        return employeeService.deleteEmployee(employeeId);
+    public void deleteEmployee(@PathVariable Integer employeeId){
+        employeeService.deleteEmployee(employeeId);
     }
 }
