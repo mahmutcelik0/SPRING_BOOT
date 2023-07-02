@@ -32,19 +32,20 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    @Transactional
+    //@Transactional DON'T NEED TRANSACTIONAL BECAUSE SPRING DATA JPA PROVIDES THAT FUNCTIONALITY
+    // BUT IF WE WRITE A CODE THAT MAKES A CHANGE IN DB VIA JPQL, WE HAVE TO ADD TRANSACTIONAL ONTO QUERY
     public Employee addEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public void deleteEmployee(Integer employeeId) {
         employeeRepository.deleteById(employeeId);
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public Employee updateEmployee(Employee employee) {
         return employeeRepository.save(employee);
 
