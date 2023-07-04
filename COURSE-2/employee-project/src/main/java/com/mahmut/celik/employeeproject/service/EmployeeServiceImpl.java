@@ -3,7 +3,6 @@ package com.mahmut.celik.employeeproject.service;
 import com.mahmut.celik.employeeproject.exception.EmployeeNotFoundException;
 import com.mahmut.celik.employeeproject.model.Employee;
 import com.mahmut.celik.employeeproject.repository.EmployeeRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
