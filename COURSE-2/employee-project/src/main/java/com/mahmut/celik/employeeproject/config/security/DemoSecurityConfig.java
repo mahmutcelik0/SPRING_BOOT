@@ -17,6 +17,16 @@ public class DemoSecurityConfig {
 
     @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource){
+        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+
+        userDetailsManager.setUsersByUsernameQuery(
+                "select user_id,pw,active from members where user_id =?"
+        );
+
+        userDetailsManager.setAuthoritiesByUsernameQuery(
+                "select user_id,role from roles where user_id =?"
+        );
+
         return new JdbcUserDetailsManager(dataSource);
         //Tell Spring Security to use JDBC authentication with our data source
     }
