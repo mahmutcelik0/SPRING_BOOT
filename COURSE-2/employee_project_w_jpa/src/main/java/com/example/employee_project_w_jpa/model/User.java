@@ -1,19 +1,17 @@
 package com.example.employee_project_w_jpa.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +19,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    @Column(name = "enabled",columnDefinition = "boolean default true")
+    @Column(name = "enabled",columnDefinition = "boolean default true") // enabled doesn't work as desired
     private boolean enabled;
 
     //Owner side will have the join table to create many to many table
@@ -32,6 +30,5 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     @Column(name = "role")
-    public Set<Role> roles = new HashSet<>();
-
+    public List<Role> roles = new ArrayList<>();
 }

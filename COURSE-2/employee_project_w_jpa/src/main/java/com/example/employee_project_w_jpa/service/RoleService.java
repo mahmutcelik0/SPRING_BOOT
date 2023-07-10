@@ -5,6 +5,7 @@ import com.example.employee_project_w_jpa.model.Role;
 import com.example.employee_project_w_jpa.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.RoleNotFoundException;
 import java.util.List;
 
 @Service
@@ -27,4 +28,10 @@ public class RoleService {
         role.setName(roleDto.getName());
         roleRepository.save(role);
     }
+
+    public Role findRoleByName(String roleName){
+        return roleRepository.findByRoleName(roleName).get(0);
+    }
+
+
 }
