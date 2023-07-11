@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service(value = "GeneralUserService")
 public class UserService {
 
     private final UserRepository userRepository;
