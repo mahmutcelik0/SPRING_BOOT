@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class WelcomeController {
     @GetMapping("/welcomePage")
     public String getWelcomePage(){
-        return "WELCOME PAGE WITHOUT SECURITY";
+        return "WELCOME PAGE WITH SECURITY";
     }
 }
