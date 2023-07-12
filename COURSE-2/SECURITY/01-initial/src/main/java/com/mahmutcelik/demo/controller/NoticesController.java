@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/notices")
 public class NoticesController {
-    @GetMapping("/notices")
+    @GetMapping
     public String getNoticesDetails(){
         return "Here are the notices details from the DB";
     }

@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/loans")
 public class LoanController {
-    @GetMapping("/loans")
+    @GetMapping
     public String getLoansDetails(){
         return "Here are the loans details from the DB";
     }
