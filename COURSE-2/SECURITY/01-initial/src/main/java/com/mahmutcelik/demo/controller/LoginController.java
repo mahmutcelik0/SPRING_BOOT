@@ -4,6 +4,7 @@ import com.mahmutcelik.demo.model.Customer;
 import com.mahmutcelik.demo.service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     private final CustomerService customerService;
 
-    public LoginController(CustomerService customerService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public LoginController(CustomerService customerService, PasswordEncoder passwordEncoder) {
         this.customerService = customerService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
@@ -21,6 +25,7 @@ public class LoginController {
         Customer savedCustomer = null;
         ResponseEntity responseEntity = null;
         try {
+            customer.setPwd(passwordEncoder.encode(customer.getPwd()));
             savedCustomer = customerService.save(customer);
             if(savedCustomer.getId() > 0){
                 responseEntity = ResponseEntity

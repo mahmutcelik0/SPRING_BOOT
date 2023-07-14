@@ -36,33 +36,10 @@ public class ProjectSecurityConfig {
         return http.build();
     }
 
-    //PROPERTIES DOSYASI YERINE CONFIG DOSYASINDA USER OLUSTURMUS OLDUK -- PRODUCTIONDA KULLANILMAZ
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsManager(){
-//
-//        UserDetails user2 = User.builder()
-//                .username("mahmut")
-//                .password("Mahmut2001")
-//                .authorities("admin")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user2);
-//    }
-    /*
-    * Default olarak DaoAuthenticationProvider kullanılıyor şuan. Ve bean olarak InMemoryUserDetailsManager oluşturduğumuz için
-    * DaoAuthenticationProvider da User ları getirmek için InMemoryUserDetailsManager kullanılıyor - başka çeşitte bir UserDetailsManager yazarsak o kullanılır
-    *
-    * */
-
-//    @Bean
-//    public UserDetailsService userDetailsManager(DataSource dataSource){
-//        return new JdbcUserDetailsManager(dataSource); // Datasource otomatik olarak db connection oluşturulduğunda oluşturulur.
-//    }
-
     //PROJEDE KULLANILACAK PASSWORD ENCODER BEAN INI OLUSTURUR
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance(); //DEPRECATED SOLUTION AND THIS DOESN'T MAKE ANY ENCRYPTION OR HASHING
+        return new BCryptPasswordEncoder();
     }
 
 
