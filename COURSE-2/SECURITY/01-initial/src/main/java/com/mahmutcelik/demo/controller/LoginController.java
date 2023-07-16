@@ -45,7 +45,7 @@ public class LoginController {
     }
 
     @GetMapping("/user")
-    public Customer getUserDetailsAfterLogin(Authentication authentication){
+    public Customer getUserDetailsAfterLogin(Authentication authentication){ //Authentication object provided by spring security automatically
         List<Customer> customers = customerService.findByEmail(authentication.getName());
         return customers.get(0);
     }

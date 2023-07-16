@@ -21,6 +21,7 @@ public class NoticesController {
         this.noticeRepository = noticeRepository;
     }
 
+    //INITIAL da gönderdikten sonra 60 sn içinde tekrar çağırıldığında cevap göndermez ui da kayıtlı olan gösterilir
     @GetMapping("/notices")
     public ResponseEntity<List<Notice>> getNotices() {
         List<Notice> notices = noticeRepository.findAllActiveNotices();
