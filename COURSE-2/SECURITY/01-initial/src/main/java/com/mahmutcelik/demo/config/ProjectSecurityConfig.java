@@ -28,7 +28,7 @@ public class ProjectSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable) //POST PUT DELETE PATCH YAPMAMIZI ENGELLIYORDU DISABLE ETTIK
-                .authorizeHttpRequests(request->request.requestMatchers("/account/**","/balance/**","/loans/**","/cards/**").authenticated() // bu base deki endpointler authentication gerektiriyor
+                .authorizeHttpRequests(request->request.requestMatchers("/account/**","/balance/**","/loans/**","/cards/**","/user/**").authenticated() // bu base deki endpointler authentication gerektiriyor
                 .requestMatchers("/notices","/contact","/register").permitAll())    // bu base deki endpointler authentication gerekmiyor
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
