@@ -1,8 +1,11 @@
 package com.mahmutcelik.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
+
+import java.util.Set;
 
 @Entity
 public class Customer {
@@ -20,13 +23,26 @@ public class Customer {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // JsonIgnore yapsaydık hem gelen requestte hem de giden response ta olmayacaktı ama bizim requestte almamız gerekiyor
+    //Bunun için JsonProperty olarak tanımladık ve sadece write_only yaptık. Böylelikle sadece requestte pwd alacak ve response ta göndermeyecek
     private String pwd;
 
     private String role;
 
     @Column(name = "create_dt")
     private String createDt;
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    @JsonIgnore //JsonIgnore -> Buradaki field json la user a gönderilmeyecek - sensitive data çünkü
+    @OneToMany(mappedBy = "customer",fetch = FetchType.EAGER) //EAGER -> customer db den jpa ile alınacağında ilgili authority lerin de hepsi alınsın
+    private Set<Authority> authorities;
 
     public int getId() {
         return id;

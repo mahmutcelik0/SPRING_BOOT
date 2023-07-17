@@ -1,5 +1,6 @@
 package com.mahmutcelik.demo.config;
 
+import com.mahmutcelik.demo.model.Authority;
 import com.mahmutcelik.demo.model.Customer;
 import com.mahmutcelik.demo.repository.CustomerRepository;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class EazyBankUsernamePwdAuthenticationProvider implements AuthenticationProvider {
@@ -42,12 +44,13 @@ public class EazyBankUsernamePwdAuthenticationProvider implements Authentication
             throw new UsernameNotFoundException("EXCEPTION IN AUTHENTICATION PROVIDER CAUSED BY PASSWORD");
         }
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
+        return new UsernamePasswordAuthenticationToken(authentication.getName(),authentication.getCredentials().toString(),getGrantedAuthorities(customer.getAuthorities())); // Authentication dan aldık çünkü kullanıcı girmişti ilk başta db den geleni almadık
+    }
 
-        authorities.add(new SimpleGrantedAuthority(customer.getRole()));
-
-        return new UsernamePasswordAuthenticationToken(authentication.getName(),authentication.getCredentials().toString(),authorities); // Authentication dan aldık çünkü kullanıcı girmişti ilk başta db den geleni almadık
-
+    private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities){
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.addAll(authorities.stream().map(e -> new SimpleGrantedAuthority(e.getName())).toList());
+        return grantedAuthorities;
     }
 
     @Override

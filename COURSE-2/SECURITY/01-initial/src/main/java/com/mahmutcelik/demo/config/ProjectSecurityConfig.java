@@ -57,7 +57,13 @@ public class ProjectSecurityConfig {
 //                .csrf(csrf -> csrf.ignoringRequestMatchers("/contact","/register")) //POST PUT DELETE PATCH YAPMAMIZI ENGELLIYORDU DISABLE ETTIK - POST OLDUKLARI İÇİN CSRF TEN GEÇİYORLAR YANİ ÇALIŞIYOR CSRF PROTECTION YAPILMIYOR
                 .csrf(csrf -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("/contact", "/register").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // ??
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class) //BasicAuthenticationFilter da kullanıcı login olmuş olur ve sonrasında da CsrfCookieFilter çalıştırılır
-                .authorizeHttpRequests(request -> request.requestMatchers("/account/**", "/balance/**", "/loans/**", "/cards/**", "/user/**").authenticated() // bu base deki endpointler authentication gerektiriyor
+
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/account/**").hasRole("USER")
+                        .requestMatchers("/balance/**").hasAnyRole("ADMIN","USER") //Authorization yerine role ile değiştirdik
+                        .requestMatchers("/loans/**").hasRole("USER")
+                        .requestMatchers("/cards/**").hasRole("USER") //Önce authentication yapılır sonrasında authorization gerçekleşir.
+                        .requestMatchers("/user/**").authenticated()            // Authorization yok authenticated olması yeterli
                         .requestMatchers("/notices", "/contact", "/register").permitAll())    // bu base deki endpointler authentication gerekmiyor
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
