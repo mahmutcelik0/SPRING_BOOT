@@ -1,6 +1,9 @@
 package com.mahmutcelik.demo.config;
 
+import com.mahmutcelik.demo.filter.AuthoritiesLoggingAfterFilter;
+import com.mahmutcelik.demo.filter.AuthoritiesLoggingAtFilter;
 import com.mahmutcelik.demo.filter.CsrfCookieFilter;
+import com.mahmutcelik.demo.filter.RequestValidationBeforeFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.mapping.Collection;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +21,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.web.RequestMatcherRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -57,7 +61,9 @@ public class ProjectSecurityConfig {
 //                .csrf(csrf -> csrf.ignoringRequestMatchers("/contact","/register")) //POST PUT DELETE PATCH YAPMAMIZI ENGELLIYORDU DISABLE ETTIK - POST OLDUKLARI İÇİN CSRF TEN GEÇİYORLAR YANİ ÇALIŞIYOR CSRF PROTECTION YAPILMIYOR
                 .csrf(csrf -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("/contact", "/register").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // ??
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class) //BasicAuthenticationFilter da kullanıcı login olmuş olur ve sonrasında da CsrfCookieFilter çalıştırılır
-
+                .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+                .addFilterAt(new AuthoritiesLoggingAtFilter(),BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthoritiesLoggingAfterFilter(),BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/account/**").hasRole("USER")
                         .requestMatchers("/balance/**").hasAnyRole("ADMIN","USER") //Authorization yerine role ile değiştirdik
