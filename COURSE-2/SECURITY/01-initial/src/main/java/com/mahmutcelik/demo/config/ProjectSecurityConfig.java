@@ -1,9 +1,6 @@
 package com.mahmutcelik.demo.config;
 
-import com.mahmutcelik.demo.filter.AuthoritiesLoggingAfterFilter;
-import com.mahmutcelik.demo.filter.AuthoritiesLoggingAtFilter;
-import com.mahmutcelik.demo.filter.CsrfCookieFilter;
-import com.mahmutcelik.demo.filter.RequestValidationBeforeFilter;
+import com.mahmutcelik.demo.filter.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.mapping.Collection;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +27,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.function.Function;
 
@@ -43,8 +41,7 @@ public class ProjectSecurityConfig {
         requestHandler.setCsrfRequestAttributeName("_csrf");
 
         http
-                .securityContext(sc -> sc.requireExplicitSave(false)) //JSESSION ID creation u ve context e save edilmesi spring framework e bırakıldı
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //JSESSION yaratılmasını engeller ve yapının stateless olmasını bir şey kaydedilmesini engeller
                 .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -53,6 +50,7 @@ public class ProjectSecurityConfig {
                         corsConfiguration.setAllowedMethods(Collections.singletonList("*"));    //Portlar farklı olduğu için browser daki cors engelliyor ama biz 4200 den geleceklere izin verdik
                         corsConfiguration.setAllowCredentials(true);
                         corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+                        corsConfiguration.setExposedHeaders(Arrays.asList("Authorization")); //JWT token ı backend ten UI a yollamamızı sağlayacak
                         corsConfiguration.setMaxAge(3600L);
                         return corsConfiguration;
                     }
@@ -64,6 +62,8 @@ public class ProjectSecurityConfig {
                 .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
                 .addFilterAt(new AuthoritiesLoggingAtFilter(),BasicAuthenticationFilter.class)
                 .addFilterAfter(new AuthoritiesLoggingAfterFilter(),BasicAuthenticationFilter.class)
+                .addFilterAfter(new JWTTokenGeneratorFilter(),BasicAuthenticationFilter.class)
+                .addFilterBefore(new JWTTokenValidatorFilter(),BasicAuthenticationFilter.class) //Basic auth öncesinde token i kontrol ediyor - Basic auth olarak yollamamışsak zaten BasicAuthenticationFilter çalışmaz
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/account/**").hasRole("USER")
                         .requestMatchers("/balance/**").hasAnyRole("ADMIN","USER") //Authorization yerine role ile değiştirdik
